@@ -7,6 +7,7 @@ import { Routes, Route, Link, useNavigate, Outlet } from 'react-router-dom';
 import Detail from './pages/detail.js';
 import axios from 'axios';
 import Cart from './pages/Cart.js';
+import { useQuery } from '@tanstack/react-query';
 
 export function App() {
     const [shoes] = useState(data);
@@ -14,6 +15,41 @@ export function App() {
     const [shoes2, setShoes2] = useState([]);
     const navigate = useNavigate();
     console.log(shoes);
+    const [test, setTest] = useState();
+
+    const result = useQuery({
+        queryKey: ['작명'],
+        queryFn: async () => {
+            try {
+                const res = await axios.get('https://codingapple1.github.io/userdata.json');
+                setTest(res.data);
+                console.log('요청됨');
+                return res.data;
+            } catch (err) {
+                console.log('데이터 가져오기실패 유즈 쿼리 :', err);
+            }
+        },
+    });
+
+    console.log('되냐', test);
+
+    // result.data ajax 요청 데이터 가져왔을때
+    // result.isLoading ajax 요청 로딩중일때
+    // result.error ajax 요청 실패했을때
+
+    useEffect(() => {
+        const checkLocalStorage = localStorage.getItem('watched');
+        if (checkLocalStorage === null) {
+            localStorage.setItem('watched', JSON.stringify([]));
+        } else {
+        }
+    });
+
+    const obj = { name: 'kim' };
+    localStorage.setItem('data', JSON.stringify(obj));
+
+    const 꺼낸거 = localStorage.getItem('data');
+    console.log('꺼낸거 :', JSON.parse(꺼낸거));
 
     useEffect(() => {
         axios
@@ -53,6 +89,7 @@ export function App() {
                         >
                             Event
                         </Nav.Link>
+                        <Nav.Link>{result.isLoading ? '로딩중' : test.name}</Nav.Link>
                     </Nav>
                 </Container>
             </Navbar>

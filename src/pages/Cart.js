@@ -1,6 +1,8 @@
 import Table from 'react-bootstrap/Table';
 import { useDispatch, useSelector } from 'react-redux';
 import { changeName, addAge } from '../store/userSlice.js';
+import { addCount } from '../store.js';
+import { useEffect } from 'react';
 
 function Cart() {
     const cartData = useSelector((state) => {
@@ -9,8 +11,9 @@ function Cart() {
     const userData = useSelector((state) => {
         return state.user;
     });
-    console.log('userData :', userData);
     const dispatch = useDispatch();
+
+    useEffect(() => {}, []);
 
     return (
         <div>
@@ -31,7 +34,13 @@ function Cart() {
                                 <td>{item.name}</td>
                                 <td>{item.count}</td>
                                 <td>
-                                    <button>+</button>
+                                    <button
+                                        onClick={() => {
+                                            dispatch(addCount(item.id));
+                                        }}
+                                    >
+                                        +
+                                    </button>
                                 </td>
                                 <td>
                                     <button

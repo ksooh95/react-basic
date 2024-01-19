@@ -1,10 +1,28 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import { addItem } from './../store';
+import { useDispatch } from 'react-redux';
 
 function Detail(props) {
     const [text, setText] = useState('');
     const [탭, 탭변경] = useState(0);
     const [detailFade, setDetailFade] = useState('');
+    const dispatch = useDispatch();
+    const [count, setCount] = useState(0);
+
+    const { id } = useParams();
+    const imgid = parseInt(id) + 1;
+    const findItem = props.shoes.find((x) => x.id == id);
+
+    useEffect(() => {
+        let 꺼낸거 = localStorage.getItem('watched');
+        꺼낸거 = JSON.parse(꺼낸거);
+        꺼낸거.push(findItem.id);
+        꺼낸거 = new Set(꺼낸거);
+        꺼낸거 = Array.from(꺼낸거);
+
+        localStorage.setItem('watched', JSON.stringify(꺼낸거));
+    }, []);
 
     useEffect(() => {
         setDetailFade('end');
@@ -15,12 +33,6 @@ function Detail(props) {
             alert('그러지마시오');
         }
     }, [text]);
-
-    const [count, setCount] = useState(0);
-
-    const { id } = useParams();
-    const imgid = parseInt(id) + 1;
-    const findItem = props.shoes.find((x) => x.id == id);
 
     return (
         <div className={`container start ${detailFade}`}>
@@ -71,7 +83,14 @@ function Detail(props) {
                     <h4 className="pt-5">{findItem.title}</h4>
                     <p>{findItem.content}</p>
                     <p>{findItem.price}원</p>
-                    <button className="btn btn-danger">주문하기</button>
+                    <button
+                        className="btn btn-danger"
+                        onClick={() => {
+                            dispatch(addItem({ id: 1, name: 'item name', count: 1 }));
+                        }}
+                    >
+                        주문하기
+                    </button>
                 </div>
             </div>
         </div>
