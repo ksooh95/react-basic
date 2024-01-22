@@ -1,6 +1,6 @@
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useTransition, useDeferredValue } from 'react';
 import { Nav, Navbar, Container } from 'react-bootstrap';
 import data from './data.js';
 import { Routes, Route, Link, useNavigate, Outlet } from 'react-router-dom';
@@ -89,7 +89,7 @@ export function App() {
                         >
                             Event
                         </Nav.Link>
-                        <Nav.Link>{result.isLoading ? '로딩중' : test.name}</Nav.Link>
+                        <Nav.Link>{result.isLoading ? '로딩중' : test && test.name}</Nav.Link>
                     </Nav>
                 </Container>
             </Navbar>
@@ -116,6 +116,7 @@ export function App() {
                         </div>
                     }
                 />
+
                 <Route path="/detail/:id" element={<Detail shoes={shoes} />} />
                 <Route
                     path="/cart"
@@ -134,11 +135,60 @@ export function App() {
                     <Route path="two" element={<>생일기념 쿠폰받기</>} />
                 </Route>
 
+                <Route path="/oh" element={<Oh></Oh>}></Route>
+
                 <Route path="*" element={<>없는페이지</>} />
             </Routes>
+            <Haha></Haha>
         </div>
     );
 }
+
+function Oh() {
+    const [age, setAge] = useState(20);
+    const [count, setCount] = useState(0);
+
+    useEffect(() => {
+        if (count != 0 && count < 3) {
+            setAge(age + 1);
+        }
+    }, [count]);
+
+    return (
+        <>
+            <div>
+                내 나이는 {age} 버튼 누른 횟수는 {count}
+            </div>
+            <button
+                onClick={() => {
+                    setCount(count + 1);
+                }}
+            >
+                누르면 카운트랑 나이 + 1
+            </button>
+        </>
+    );
+}
+
+const Haha = function () {
+    const [hahaname, setHahaname] = useState();
+    let [isPending, startTransition] = useTransition();
+    const 변수값 = useDeferredValue(hahaname);
+
+    return (
+        <div className="Haha">
+            {hahaname}
+            <input
+                type="text"
+                onChange={(e) => {
+                    // startTransition(() => {
+                    setHahaname(e.target.value);
+                    // });
+                }}
+            />
+        </div>
+    );
+};
 
 function About() {
     return (

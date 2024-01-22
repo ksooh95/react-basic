@@ -2,7 +2,12 @@ import Table from 'react-bootstrap/Table';
 import { useDispatch, useSelector } from 'react-redux';
 import { changeName, addAge } from '../store/userSlice.js';
 import { addCount } from '../store.js';
-import { useEffect } from 'react';
+import { useEffect, useState, memo } from 'react';
+
+const Child = memo(function () {
+    console.log('자식 : 재렌더링됨');
+    return <div>자식임</div>;
+});
 
 function Cart() {
     const cartData = useSelector((state) => {
@@ -12,11 +17,18 @@ function Cart() {
         return state.user;
     });
     const dispatch = useDispatch();
+    const [count, setCount] = useState();
 
     useEffect(() => {}, []);
 
     return (
         <div>
+            <Child count={count}></Child>
+            <button
+                onClick={() => {
+                    setCount(count + 1);
+                }}
+            ></button>
             <Table>
                 <thead>
                     <tr>
